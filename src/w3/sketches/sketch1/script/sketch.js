@@ -4,11 +4,11 @@ let posXdd = 3;
 let posYAdd = -2;
 
 function setup() {
-  setCanvasContainer('canvas', 3, 2, true);
+  setCanvasContainer('mySketchGoesHere', 3, 2, true);
   background(255);
   posX = width / 2;
   posY = height / 2;
-  ellipes(posX, posY, 50);
+  ellipse(posX, posY, 50);
 }
 
 function draw() {
@@ -17,5 +17,5 @@ function draw() {
   // posX = posX + 1;
   // posX += 1;
   posY += 3;
-  ellipes(posX, posY, 50);
+  ellipse(posX, posY, 50);
 }
