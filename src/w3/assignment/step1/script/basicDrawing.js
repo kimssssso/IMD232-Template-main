@@ -8,12 +8,6 @@ let pos;
 let vel;
 let acc;
 
-function setup() {
-  createCanvas(400, 400);
-  pos = createVector(width / 2, height / 2);
-  vel = createVector(0, 0);
-}
-
 let randomAcc = p5.Vector.random2D();
 randomAcc.mult(2);
 acc = randomAcc;
@@ -29,9 +23,6 @@ if (pos.y > height) {
 } else if (pos.y < 0) {
   pos.y = height;
 }
-
-noFill();
-stroke(0);
 ellipse(pos.x, pos.y, 50, 50);
 
 let mouseVector = createVector(mouseX, mouseY);
