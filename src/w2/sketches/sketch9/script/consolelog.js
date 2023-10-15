@@ -49,7 +49,7 @@ multiplication *= two;
 console.log('곱하기', multiplication);
 
 console.log('square, 제곱', 8 ** 2);
-console.log('세제곱,' 8 ** 3);
+console.log('세제곱', 8 ** 3);
 console.log('root square, 제곱근', 64 ** (1 / 2));
 
 division = division / two;
@@ -64,10 +64,9 @@ counter += 1;
 console.log('counter', counter);
 counter += 1;
 console.log('counter', counter);
-counter ++;
+counter++;
 console.log('counter', counter);
-counter ++;
+counter++;
 console.log('counter', counter);
-counter ++;
+counter++;
 console.log('counter', counter);
-
