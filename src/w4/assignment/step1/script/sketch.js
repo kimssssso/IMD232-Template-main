@@ -1,36 +1,33 @@
-class Body {
-  constructor(x, y, mass) {
-    this.pos = createVector(x, y);
-    this.vel = createVector(0, 0);
-    this.acc = createVector(0, 0);
-    this.mass = mass;
-    this.radius = this.mass ** (1 / 2) * 5; // 6. 20<=radius<=50
-  }
+let bodies = [];
 
-  attract(body) {
-    let force = p5.Vector.sub(this.pos, body.pos);
-    let distance = constrain(force.mag(), 5, 25);
-    let strength = (G * (this.mass * body.mass)) / distance ** 2;
-    force.setMag(strength);
-    return force;
-  }
+let G = 1;
 
-  applyForce(force) {
-    let acc = p5.Vector.div(force, this.mass);
-    this.acc.add(acc);
-  }
+// 7. bodyNum>20
+let bodyNum = 30;
 
-  update() {
-    this.vel.add(this.acc);
-    this.pos.add(this.vel);
+function setup() {
+  setCanvasContainer('canvas', 3, 2, true);
+  reset();
+}
 
-    this.acc.set(0, 0);
-  }
+function draw() {
+  background(255);
 
-  display() {
-    stroke(0);
-    strokeWeight(2);
-    fill(127, 127);
-    circle(this.pos.x, this.pos.y, this.radius * 2);
+  for (let i = 0; i < bodyNum; i++) {
+    for (let j = 0; j < bodyNum; j++)
+      if (i !== j) bodies[j].applyForce(bodies[i].attract(bodies[j]));
+
+    bodies[i].update();
+    bodies[i].display();
   }
+}
+
+function mousePressed() {
+  if (isMouseInsideCanvas()) reset();
+}
+
+// 5. 16<=mass<=100
+function reset() {
+  for (let i = 0; i < bodyNum; i++)
+    bodies[i] = new Body(random(width), random(height), random(16, 100));
 }

@@ -1,91 +1,57 @@
-class Mover {
-  constructor(x, y, mass) {
-    this.pos = createVector(x, y);
-    this.vel = createVector(0, 0);
-    this.acc = createVector(0, 0);
-    this.mass = mass;
-    this.radius = this.mass ** 0.5 * 10;
+let randR = [];
+let randG = [];
+let randB = [];
+let strokes;
+let rad = 25;
+let angle = [];
 
-    this.moverUpdate = true;
-    this.dragOffset = createVector(0, 0);
-    this.dragging = false;
-    this.hover = false;
+function setup() {
+  setCanvasContainer('canvas', 1, 1, true);
+  background(255);
+
+  for (let i = 0; i < 4; i++) {
+    randR.push(Math.floor(random(255)));
+    randG.push(Math.floor(random(255)));
+    randB.push(Math.floor(random(255)));
+  }
+  strokes = new Array(64);
+
+  for (let i = 0; i < 64; i++) {
+    strokes[i] = new Array(3);
+    strokes[i][0] = randR[Math.floor(random(0, 5))];
+    strokes[i][1] = randG[Math.floor(random(0, 5))];
+    strokes[i][2] = randB[Math.floor(random(0, 5))];
   }
 
-  applyForce(force) {
-    let forceDividedByMass = createVector(force.x, force.y);
-    forceDividedByMass.div(this.mass);
-    this.acc.add(forceDividedByMass);
+  for (let i = 0; i < 64; i++) {
+    angle.push((TAU / 360) * (-90 + 15 * i));
   }
+}
 
-  update() {
-    this.vel.add(this.acc);
-    this.pos.add(this.vel);
-    this.acc.mult(0);
-  }
+function draw() {
+  background(255);
 
-  contactEdge() {
-    if (this.pos.y >= height - 1 - this.radius - 1) {
-      return true;
-    } else {
-      return false;
+  for (let i = 0; i < 8; i++)
+    for (let j = 0; j < 8; j++) {
+      strokeWeight(2);
+      noFill();
+      let num = i * 8 + j;
+      stroke(strokes[num][0], strokes[num][1], strokes[num][2]);
+
+      let gap = (width - rad * 16) / 9;
+      let x = gap * (j + 1) + (2 * j + 1) * rad;
+      let y = gap * (i + 1) + (2 * i + 1) * rad;
+
+      ellipse(x, y, rad * 2);
+
+      let pointX = cos(angle[num]) * rad + x;
+      let pointY = sin(angle[num]) * rad + y;
+      line(x, y, pointX, pointY);
+
+      noStroke();
+      fill(0);
+      ellipse(pointX, pointY, 10);
+
+      angle[num] += (TAU / 360) * 1;
     }
-  }
-
-  checkEdges() {
-    const bounce = -0.9;
-    if (this.pos.x < 0 + this.radius) {
-      this.pos.x -= 0 + this.radius;
-      this.pos.x *= -1;
-      this.pos.x += 0 + this.radius;
-      this.vel.x *= bounce;
-    } else if (this.pos.x > width - 1 - this.radius) {
-      this.pos.x -= width - 1 - this.radius;
-      this.pos.x *= -1;
-      this.pos.x += width - 1 - this.radius;
-      this.vel.x *= bounce;
-    }
-    if (this.pos.y > height - 1 - this.radius) {
-      this.pos.y -= height - 1 - this.radius;
-      this.pos.y *= -1;
-      this.pos.y += height - 1 - this.radius;
-      this.vel.y *= bounce;
-    }
-  }
-
-  display() {
-    noStroke();
-    fill(0);
-    ellipse(this.pos.x, this.pos.y, 2 * this.radius);
-  }
-
-  handleHover(mx, my) {
-    let d = dist(mx, my, this.pos.x, this.pos.y);
-    if (d < this.radius) {
-      this.hover = true;
-    } else {
-      this.hover = false;
-    }
-  }
-
-  handlePress(mx, my) {
-    if (!this.hover) return;
-    this.dragging = true;
-    this.dragOffset.x = this.pos.x - mx;
-    this.dragOffset.y = this.pos.y - my;
-    this.moverUpdate = false;
-    this.vel.mult(0);
-  }
-
-  stopDragging() {
-    this.dragging = false;
-    this.moverUpdate = true;
-  }
-
-  handleDrag(mx, my) {
-    if (this.dragging) {
-      this.pos.x = mx + this.dragOffset.x;
-      this.pos.y = my + this.dragOffset.y;
-    }
-  }
 }
