@@ -1,28 +1,49 @@
-let rad;
-let angle;
-let angleVel;
-let vel = 1;
+let emitters = [];
+let gravity = 0;
+let repeller;
 
 function setup() {
   setCanvasContainer('canvas', 3, 2, true);
-  rad = height * 0.4;
-  angle = 0;
-  angleVel = (TAU / 360) * vel;
+
+  for (let i = 0; i < 5; i++) {
+    emitters.push(new Emitter((width / 6) * (i + 1), 20));
+  }
+
+  gravity = createVector(0, 0.05);
+
+  repeller = new Repeller(width / 2, height / 2, 5000);
+
+  background(255);
 }
 
 function draw() {
+  for (let i = 0; i < emitters.length; i++) {
+    emitters[i].addParticle();
+  }
+
   background(255);
+  for (let i = 0; i < emitters.length; i++) {
+    emitters[i].applyGravity(gravity);
+    emitters[i].applyRepeller(repeller);
+    emitters[i].update();
+    emitters[i].display();
+  }
 
-  translate(width / 2, height / 2);
+  repeller.display();
+}
 
-  let x = rad * cos(angle);
-  let y = rad * sin(angle);
+function mouseMoved() {
+  repeller.mouseMoved(mouseX, mouseY);
+}
 
-  fill(127);
-  stroke(0);
-  strokeWeight(2);
-  line(0, 0, x, y);
-  circle(x, y, 48);
+function mousePressed() {
+  repeller.mousePressed(mouseX, mouseY);
+}
 
-  angle += angleVel;
+function mouseDragged() {
+  repeller.mouseDragged(mouseX, mouseY);
+}
+
+function mouseReleased() {
+  repeller.mouseReleased();
 }

@@ -1,24 +1,27 @@
-const movers = [];
-let mouseVector;
+let emitters = [];
+let gravity = 0;
 
 function setup() {
   setCanvasContainer('canvas', 3, 2, true);
 
-  for (let i = 0; i < 20; i++)
-    movers.push(new Mover(random(width), random(height), 1));
+  emitters.push(new Emitter(width / 2, 20));
+  gravity = createVector(0, 0.1);
 
-  mouseVector = createVector();
+  background(255);
 }
 
 function draw() {
+  for (let i = 0; i < emitters.length; i++) {
+    emitters[i].addParticle();
+  }
+
   background(255);
-  mouseVector.set(mouseX, mouseY);
-  movers.forEach((eachMover) => {
-    const dirForce = p5.Vector.sub(mouseVector, eachMover.pos);
-    dirForce.setMag(0.05);
-    eachMover.applyForce(dirForce);
-    eachMover.update();
-    eachMover.display();
-    eachMover.displayVectors();
-  });
+  for (let i = 0; i < emitters.length; i++) {
+    emitters[i].update(gravity);
+    emitters[i].display();
+  }
+}
+
+function mousePressed() {
+  emitters.push(new Emitter(mouseX, mouseY));
 }

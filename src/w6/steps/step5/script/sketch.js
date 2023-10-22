@@ -1,19 +1,33 @@
-const period = 120;
-const amplitude = 200;
+let emitter;
+let floatingForce;
+let windForce;
+let texture;
+
+function preload() {
+  texture = loadImage('data/texture.png');
+}
 
 function setup() {
-  setCanvasContainer('canvas', 3, 2, true);
+  setCanvasContainer('canvas', 2, 1, true);
+
+  emitter = new Emitter(width / 2, height - 50);
+  floatingForce = createVector(0, -0.005);
+  windForce = createVector();
+
+  imageMode(CENTER);
+  background(16);
 }
 
 function draw() {
-  background(255);
+  let windX = map(mouseX, 0, width - 1, -1, 1);
+  windX *= 0.05;
+  windForce.set(windX, 0);
+  emitter.addParticle();
+  emitter.applyForce(floatingForce);
+  emitter.applyForce(windForce);
+  emitter.update();
 
-  const x = amplitude * sin((TAU * frameCount) / period);
+  background(16);
 
-  stroke(0);
-  strokeWeight(2);
-  fill(127);
-  translate(width / 2, height / 2);
-  line(0, 0, x, 0);
-  circle(x, 0, 48);
+  emitter.display();
 }
